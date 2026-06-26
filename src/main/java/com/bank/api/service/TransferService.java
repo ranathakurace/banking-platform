@@ -1,5 +1,4 @@
 package com.bank.api.service;
-
 import com.bank.api.dto.TransferRequest;
 import com.bank.api.dto.TransferResponse;
 import com.bank.api.exception.AccountNotFoundException;
@@ -30,18 +29,21 @@ public class TransferService {
         }
 
         // 2️⃣ Fetch accounts
-        Account from = repository.findById(request.getFromAccountId());
-        Account to = repository.findById(request.getToAccountId());
+        Long fromAccountId = request.getFromAccountId().longValue();
+        Long toAccountId = request.getToAccountId().longValue();
 
-        if (from == null) {
-            throw new AccountNotFoundException(request.getFromAccountId());
-        }
-        if (to == null) {
-            throw new AccountNotFoundException(request.getToAccountId());
-        }
+        Account from = repository.findById(fromAccountId)
+                .orElseThrow(() -> new TransferFailedException(
+                        "Source account not found"));
+
+        Account to = repository.findById(toAccountId)
+                .orElseThrow(() -> new TransferFailedException(
+                        "Destination account not found"));
+
+       
 
         // 3️⃣ Business validations
-        if (from.getAccountId() == to.getAccountId()) {
+        if (from.getId() == to.getId()) {
             throw new TransferFailedException("Cannot transfer to same account");
         }
 
@@ -58,16 +60,11 @@ public class TransferService {
         double originalToBalance = to.getBalance();
 
         try {
-            // 5️⃣ Debit source account
-        	Account debitedFrom = new Account(
-        		    from.getAccountId(),
-        		    from.getCustomerId(),
-        		    from.getAccountType(),
-        		    originalFromBalance - request.getAmount(),
-        		    from.getCurrency(),
-        		    from.getStatus()
-        		);
-            repository.update(debitedFrom);
+
+            // 5 Debit source account
+            from.setBalance(originalFromBalance - request.getAmount());
+
+            repository.save(from);
 
             // 🔴 OPTIONAL: simulate failure for learning/testing
             // if (request.getAmount() > 10000) {
@@ -75,22 +72,16 @@ public class TransferService {
             // }
 
             // 6️⃣ Credit destination account
-            Account creditedTo = new Account(
-            	    to.getAccountId(),
-            	    to.getCustomerId(),
-            	    to.getAccountType(),
-            	    originalToBalance + request.getAmount(),
-            	    to.getCurrency(),
-            	    to.getStatus()
-            	);
-            repository.update(creditedTo);
+            to.setBalance(originalToBalance + request.getAmount());
+
+            repository.save(to);
 
             // 7️⃣ Prepare response
             TransferResponse response = new TransferResponse(
                     "SUCCESS",
                     "Transfer completed",
-                    debitedFrom.getBalance(),
-                    creditedTo.getBalance()
+                    from.getBalance(),
+                    to.getBalance()
             );
 
             // 8️⃣ Save idempotent result
@@ -100,28 +91,16 @@ public class TransferService {
 
         } catch (Exception ex) {
 
-            // 9️⃣ ROLLBACK on any failure
-        	repository.update(new Account(
-        		    from.getAccountId(),
-        		    from.getCustomerId(),
-        		    from.getAccountType(),
-        		    originalFromBalance,
-        		    from.getCurrency(),
-        		    from.getStatus()
-        		));
+            // Rollback balances
+            from.setBalance(originalFromBalance);
+            to.setBalance(originalToBalance);
 
-        	repository.update(new Account(
-        		    to.getAccountId(),
-        		    to.getCustomerId(),
-        		    to.getAccountType(),
-        		    originalToBalance,
-        		    to.getCurrency(),
-        		    to.getStatus()
-        		));
+            repository.save(from);
+            repository.save(to);
 
             throw new TransferFailedException(
-                    "Transfer rolled back due to error: " + ex.getMessage()
-            );
+                    "Transfer rolled back due to error: " + ex.getMessage());
+        }
         }
     }
-}
+

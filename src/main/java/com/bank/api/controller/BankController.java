@@ -16,6 +16,7 @@ import javax.validation.constraints.Min;
 
 @RestController
 @Validated
+
 public class BankController {
 
     private final AccountService accountService;
@@ -33,23 +34,24 @@ public class BankController {
      */
     @GetMapping("/bank/balance/{accountId}")
     public AccountResponse getBalance(
+
             @PathVariable
             @Min(value = 1, message = "accountId must be greater than 0")
-            int accountId) {
+            Long accountId) {
 
         // 🔍 External Fraud Check (WireMock)
-        FraudResponse fraudResponse = fraudClient.checkFraud(accountId);
+    	FraudResponse fraudResponse = fraudClient.checkFraud(accountId);
 
         if (fraudResponse != null && fraudResponse.isFraudulent()) {
             throw new RuntimeException(
                     "Account flagged for fraud: " + fraudResponse.getReason()
             );
         }
-
+       
         Account account = accountService.getAccount(accountId);
 
         return new AccountResponse(
-                account.getAccountId(),
+                account.getId(),
                 account.getBalance(),
                 account.getCurrency(),
                 account.getStatus()
@@ -67,6 +69,7 @@ public class BankController {
             @Min(value = 1, message = "accountId must be greater than 0")
             int accountId) {
 
-        return "Account " + accountId + " deleted successfully";
+    	accountService.deleteAccount((long) accountId);
+    	return "Account deleted successfully";
     }
 }

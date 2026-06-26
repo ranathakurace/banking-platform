@@ -1,26 +1,32 @@
 package com.bank.api.service;
 
-import com.bank.api.exception.AccountNotFoundException;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.bank.api.model.Account;
 import com.bank.api.repository.AccountRepository;
-import org.springframework.stereotype.Service;
 
 @Service
 public class AccountService {
 
-    private final AccountRepository repository;
+    @Autowired
+    private AccountRepository accountRepository;
 
-    public AccountService(AccountRepository repository) {
-        this.repository = repository;
+    public Account save(Account account) {
+        return accountRepository.save(account);
     }
 
-    public Account getAccount(int accountId) {
-        Account account = repository.findById(accountId);
+    public List<Account> getAllAccounts() {
+        return accountRepository.findAll();
+    }
 
-        if (account == null) {
-            throw new AccountNotFoundException(accountId);
-        }
+    public Account getAccount(Long id) {
+        return accountRepository.findById(id).orElse(null);
+    }
 
-        return account;
+    public void deleteAccount(Long id) {
+        accountRepository.deleteById(id);
     }
 }

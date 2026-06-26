@@ -9,7 +9,7 @@ public class FraudClient {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public FraudResponse checkFraud(int accountId) {
+    public FraudResponse checkFraud(Long accountId) {
 
         String url = "http://localhost:9999/fraud/check?accountId=" + accountId;
 
