@@ -1,111 +1,150 @@
 package com.bank.api.exception;
 
-import com.bank.api.dto.ErrorResponse;
+import java.time.LocalDateTime;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import javax.validation.ConstraintViolationException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     /**
-     * ACCOUNT NOT FOUND → 404
+     * ==========================================================
+     * Invalid Customer Request
+     * HTTP 400 - Bad Request
+     * ==========================================================
      */
-    @ExceptionHandler(AccountNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleAccountNotFound(
-            AccountNotFoundException ex) {
+    @ExceptionHandler(InvalidCustomerException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidCustomer(
+            InvalidCustomerException ex,
+            HttpServletRequest request) {
 
-        ErrorResponse error = new ErrorResponse(
-                "ACCOUNT_NOT_FOUND",
-                ex.getMessage()
-        );
+        ErrorResponse error = new ErrorResponse();
 
-        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
-    }
-
-    /**
-     * VALIDATION ERROR (Path / Query / Header) → 400
-     */
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ErrorResponse> handleConstraintViolation(
-            ConstraintViolationException ex) {
-
-        ErrorResponse error = new ErrorResponse(
-                "INVALID_REQUEST",
-                ex.getMessage()
-        );
+        error.setTimestamp(LocalDateTime.now());
+        error.setStatus(HttpStatus.BAD_REQUEST.value());
+        error.setErrorCode("INVALID_CUSTOMER");
+        error.setMessage(ex.getMessage());
+        error.setPath(request.getRequestURI());
 
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     /**
-     * REQUEST BODY VALIDATION ERROR → 400
+     * ==========================================================
+     * Duplicate Customer
+     * HTTP 409 - Conflict
+     * ==========================================================
      */
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleBodyValidation(
-            MethodArgumentNotValidException ex) {
+    @ExceptionHandler(CustomerAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleCustomerAlreadyExists(
+            CustomerAlreadyExistsException ex,
+            HttpServletRequest request) {
 
-        String message = ex.getBindingResult()
-                .getFieldErrors()
-                .get(0)
-                .getDefaultMessage();
+        ErrorResponse error = new ErrorResponse();
 
-        ErrorResponse error = new ErrorResponse(
-                "INVALID_REQUEST",
-                message
-        );
-
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-    }
-
-    /**
-     * TRANSFER FAILURE / ROLLBACK → 409
-     */
-    @ExceptionHandler(TransferFailedException.class)
-    public ResponseEntity<ErrorResponse> handleTransferFailed(
-            TransferFailedException ex) {
-
-        ErrorResponse error = new ErrorResponse(
-                "TRANSFER_FAILED",
-                ex.getMessage()
-        );
+        error.setTimestamp(LocalDateTime.now());
+        error.setStatus(HttpStatus.CONFLICT.value());
+        error.setErrorCode("CUSTOMER_ALREADY_EXISTS");
+        error.setMessage(ex.getMessage());
+        error.setPath(request.getRequestURI());
 
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 
     /**
-     * AUTH / SECURITY / BUSINESS ERRORS → 400
+     * ==========================================================
+     * Customer Not Found
+     * HTTP 404 - Not Found
+     * ==========================================================
      */
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorResponse> handleRuntime(
-            RuntimeException ex) {
+    @ExceptionHandler(CustomerNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleCustomerNotFound(
+            CustomerNotFoundException ex,
+            HttpServletRequest request) {
 
-        ErrorResponse error = new ErrorResponse(
-                "BUSINESS_ERROR",
-                ex.getMessage()
-        );
+        ErrorResponse error = new ErrorResponse();
 
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        error.setTimestamp(LocalDateTime.now());
+        error.setStatus(HttpStatus.NOT_FOUND.value());
+        error.setErrorCode("CUSTOMER_NOT_FOUND");
+        error.setMessage(ex.getMessage());
+        error.setPath(request.getRequestURI());
+
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
     /**
-     * FALLBACK → 500
+     * ==========================================================
+     * Account Not Found
+     * HTTP 404 - Not Found
+     * ==========================================================
+     */
+    @ExceptionHandler(AccountNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleAccountNotFound(
+            AccountNotFoundException ex,
+            HttpServletRequest request) {
+
+        ErrorResponse error = new ErrorResponse();
+
+        error.setTimestamp(LocalDateTime.now());
+        error.setStatus(HttpStatus.NOT_FOUND.value());
+        error.setErrorCode("ACCOUNT_NOT_FOUND");
+        error.setMessage(ex.getMessage());
+        error.setPath(request.getRequestURI());
+
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * ==========================================================
+     * Transfer Failed
+     * HTTP 409 - Conflict
+     * ==========================================================
+     */
+    @ExceptionHandler(TransferFailedException.class)
+    public ResponseEntity<ErrorResponse> handleTransferFailed(
+            TransferFailedException ex,
+            HttpServletRequest request) {
+
+        ErrorResponse error = new ErrorResponse();
+
+        error.setTimestamp(LocalDateTime.now());
+        error.setStatus(HttpStatus.CONFLICT.value());
+        error.setErrorCode("TRANSFER_FAILED");
+        error.setMessage(ex.getMessage());
+        error.setPath(request.getRequestURI());
+
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
+
+    /**
+     * ==========================================================
+     * Unexpected Exception
+     * HTTP 500 - Internal Server Error
+     * ==========================================================
      */
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGeneric(
-            Exception ex) {
+    public ResponseEntity<ErrorResponse> handleException(
+            Exception ex,
+            HttpServletRequest request) {
 
         ex.printStackTrace();
 
-        ErrorResponse error = new ErrorResponse(
-                "INTERNAL_ERROR",
-                ex.getMessage()
-        );
+        ErrorResponse error = new ErrorResponse();
 
-        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+        error.setTimestamp(LocalDateTime.now());
+        error.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        error.setErrorCode("INTERNAL_SERVER_ERROR");
+        error.setMessage("Something went wrong. Please contact support.");
+        error.setPath(request.getRequestURI());
+
+        return new ResponseEntity<>(error,
+                HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
 }

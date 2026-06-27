@@ -6,19 +6,29 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "customers")
 public class Customer {
-
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+	@Column(name = "customer_number", unique = true, nullable = false)
+	private String customerNumber;
 
     private String fullName;
 
@@ -37,6 +47,8 @@ public class Customer {
     private LocalDate dob;
 
     private String kycStatus;
+    @Enumerated(EnumType.STRING)
+    private CustomerStatus customerStatus;
 
     private Integer riskScore;
     
@@ -44,4 +56,5 @@ public class Customer {
     private List<Account> accounts;
 
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }
