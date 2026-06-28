@@ -112,7 +112,7 @@ src/main/java
 | Story     | Module                           | Status      |
 | --------- | -------------------------------- | ----------- |
 | Story-001 | Enterprise Customer Registration | ✅ Completed |
-| Story-002 | Enterprise Account Opening       | ⏳ Planned   |
+| Story-002 | Customer Search API		       | ⏳ Planned   |
 | Story-003 | Cash Deposit                     | ⏳ Planned   |
 | Story-004 | Cash Withdrawal                  | ⏳ Planned   |
 | Story-005 | Fund Transfer                    | ⏳ Planned   |
@@ -157,6 +157,9 @@ Implemented:
 * Global Exception Handler
 * Customer Number Generation
 * Enterprise Default Initialization
+* AI Assisted Fraud Detection
+* AI Transaction Risk Scoring
+* LLM Powered Customer Support
 
 ---
 
@@ -196,7 +199,7 @@ Please open an issue or submit a pull request after discussing significant chang
 This repository is intended for educational purposes and enterprise software engineering practice.
 ## Latest Progress (29-Jun-2026)
 
-### Customer Registration Testing Completed
+#### Story-001 Completion
 
 ✔ Positive API testing completed
 ✔ Duplicate PAN validation (409 Conflict)
@@ -209,4 +212,4 @@ This repository is intended for educational purposes and enterprise software eng
 ✔ Enterprise error responses validated
 
 Current Status:
-Story-001 Customer Registration is functionally complete and undergoing comprehensive negative and boundary testing.
+Story-001 Customer Registration completed successfully.
