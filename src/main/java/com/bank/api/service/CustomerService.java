@@ -6,9 +6,12 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import java.util.regex.Pattern;
+import com.bank.api.util.ValidationUtil;
 import com.bank.api.dto.CustomerRequest;
 import com.bank.api.dto.CustomerResponse;
+import com.bank.api.exception.CustomerAlreadyExistsException;
+import com.bank.api.exception.InvalidCustomerException;
 import com.bank.api.model.Customer;
 import com.bank.api.model.CustomerStatus;
 import com.bank.api.repository.CustomerRepository;
@@ -43,37 +46,81 @@ public class CustomerService {
     	 */
 
     	if (request == null) {
-    	    throw new IllegalArgumentException("Customer request cannot be null.");
+    	    throw new InvalidCustomerException("Customer request cannot be null.");
     	}
 
     	if (request.getFullName() == null || request.getFullName().trim().isEmpty()) {
-    	    throw new IllegalArgumentException("Full Name is mandatory.");
+    	    throw new InvalidCustomerException("Full Name is mandatory.");
     	}
 
     	if (request.getEmail() == null || request.getEmail().trim().isEmpty()) {
-    		throw new IllegalArgumentException("Email is mandatory.");
+    		throw new InvalidCustomerException("Email is mandatory.");
     	}
 
     	if (request.getPhone() == null || request.getPhone().trim().isEmpty()) {
-    		throw new IllegalArgumentException("PAN is mandatory.");
+    	    throw new InvalidCustomerException("Phone Number is mandatory.");
     	}
 
     	if (request.getPan() == null || request.getPan().trim().isEmpty()) {
-    		throw new IllegalArgumentException("Aadhaar Number is mandatory.");
+    	    throw new InvalidCustomerException("PAN Number is mandatory.");
     	}
 
     	if (request.getAadhaar() == null || request.getAadhaar().trim().isEmpty()) {
-    	    throw new IllegalArgumentException("Aadhaar Number is required.");
+    	    throw new InvalidCustomerException("Aadhaar Number is mandatory.");
     	}
 
     	if (request.getDob() == null) {
-    	    throw new IllegalArgumentException("Date of Birth is mandatory.");
+    	    throw new InvalidCustomerException("Date of Birth is mandatory.");
     	}
 
     	if (request.getDob().isAfter(LocalDate.now().minusYears(18))) {
-    	    throw new IllegalArgumentException("Customer must be at least 18 years old.");
+    	    throw new InvalidCustomerException("Customer must be at least 18 years old.");
+    	}
+    	/*
+    	 * ==========================================================
+    	 * Step 1.1 : Validate Customer Data Format
+    	 * ==========================================================
+    	 */
+
+    	// Full Name
+    	if (!Pattern.matches(ValidationUtil.NAME_REGEX,
+    	        request.getFullName().trim())) {
+
+    	    throw new InvalidCustomerException(
+    	            "Full Name should contain only alphabets and spaces.");
     	}
 
+    	// Email
+    	if (!Pattern.matches(ValidationUtil.EMAIL_REGEX,
+    	        request.getEmail().trim())) {
+
+    	    throw new InvalidCustomerException(
+    	            "Invalid Email format.");
+    	}
+
+    	// Phone
+    	if (!Pattern.matches(ValidationUtil.PHONE_REGEX,
+    	        request.getPhone().trim())) {
+
+    	    throw new InvalidCustomerException(
+    	            "Invalid Phone Number.");
+    	}
+
+    	// PAN
+    	if (!Pattern.matches(ValidationUtil.PAN_REGEX,
+    	        request.getPan().trim().toUpperCase())) {
+
+    	    throw new InvalidCustomerException(
+    	            "Invalid PAN Number.");
+    	}
+
+    	// Aadhaar
+    	if (!Pattern.matches(ValidationUtil.AADHAAR_REGEX,
+    	        request.getAadhaar().trim())) {
+
+    	    throw new InvalidCustomerException(
+    	            "Invalid Aadhaar Number.");
+    	}
 
     	/*
     	 * ==========================================================
@@ -89,20 +136,24 @@ public class CustomerService {
     	 *
     	 */
 
-    	if (customerRepository.existsByPan(request.getPan())) {
-    	    throw new IllegalArgumentException("PAN already registered.");
+    	// PAN
+    	if (customerRepository.existsByPan(request.getPan().trim().toUpperCase())) {
+    	    throw new CustomerAlreadyExistsException("PAN already registered.");
     	}
 
-    	if (customerRepository.existsByAadhaar(request.getAadhaar())) {
-    	    throw new IllegalArgumentException("Aadhaar already registered.");
+    	// Aadhaar
+    	if (customerRepository.existsByAadhaar(request.getAadhaar().trim())) {
+    	    throw new CustomerAlreadyExistsException("Aadhaar already registered.");
     	}
 
-    	if (customerRepository.existsByEmail(request.getEmail())) {
-    	    throw new IllegalArgumentException("Email already registered.");
+    	// Email
+    	if (customerRepository.existsByEmail(request.getEmail().trim().toLowerCase())) {
+    	    throw new CustomerAlreadyExistsException("Email already registered.");
     	}
 
-    	if (customerRepository.existsByPhone(request.getPhone())) {
-    	    throw new IllegalArgumentException("Phone Number already registered.");
+    	// Phone
+    	if (customerRepository.existsByPhone(request.getPhone().trim())) {
+    	    throw new CustomerAlreadyExistsException("Phone Number already registered.");
     	}
 
     	/*
@@ -124,15 +175,15 @@ public class CustomerService {
 
     	customer.setCustomerNumber(customerNumber);
 
-    	customer.setFullName(request.getFullName());
+    	customer.setFullName(request.getFullName().trim());
 
-    	customer.setEmail(request.getEmail());
+    	customer.setEmail(request.getEmail().trim().toLowerCase());
 
-    	customer.setPhone(request.getPhone());
+    	customer.setPhone(request.getPhone().trim());
 
-    	customer.setPan(request.getPan());
+    	customer.setPan(request.getPan().trim().toUpperCase());
 
-    	customer.setAadhaar(request.getAadhaar());
+    	customer.setAadhaar(request.getAadhaar().trim());
 
     	customer.setDob(request.getDob());
 
