@@ -1,4 +1,4 @@
-# 🏦 BankVerse
+# 🏦 🌍 BankVerse Global Banking Ecosystem
 
 ![Java](https://img.shields.io/badge/Java-11-orange)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-2.7.18-brightgreen)
@@ -86,7 +86,59 @@ src/main/java
 ```
 
 ---
+# 🏦 Enterprise Banking Architecture Roadmap
 
+```text
+                                              🌍 BANKVERSE
+                                  Global Digital Banking Platform
+--------------------------------------------------------------------------------------------------
+
+                                            👤 Customer Channels
+                                                  │
+                     ┌────────────────────────────┼────────────────────────────┐
+                     │                            │                            │
+               🌐 Web Portal                 📱 Mobile App              🤖 AI Assistant
+                     │                            │                            │
+                     └────────────────────────────┼────────────────────────────┘
+                                                  │
+                                           🌐 API Gateway
+                                                  │
+ ──────────────────────────────────────────────────────────────────────────────────────────────────
+                                                  │
+        ┌────────────────────┬────────────────────┼────────────────────┬────────────────────┐
+        │                    │                    │                    │                    │
+ 👤 Customer Service   🏦 Account Service   💸 Transaction      💳 Payment Gateway   🔔 Notification
+                                              Service                 Service              Service
+        │                    │                    │                    │                    │
+        │                    │                    │                    │                    │
+        ├──────────────┬─────┴────────────┬──────┴──────────────┬─────┴──────────────┐
+        │              │                  │                     │                    │
+   📑 KYC Service  💰 Loan Service   💳 Card Service    👥 Beneficiary        💱 Forex Service
+        │              │                  │                     │                    │
+        └──────────────┴──────────────────┴─────────────────────┴────────────────────┘
+                                                  │
+──────────────────────────────────────────────────────────────────────────────────────────────────
+                                         🔐 Security Layer
+                            JWT • OAuth2 • RBAC • Audit • Logging
+                                                  │
+──────────────────────────────────────────────────────────────────────────────────────────────────
+                                          📨 Event Driven Layer
+                                Kafka • RabbitMQ • Event Streaming
+                                                  │
+──────────────────────────────────────────────────────────────────────────────────────────────────
+                                         💾 Persistence Layer
+                         PostgreSQL • Redis Cache • Object Storage
+                                                  │
+──────────────────────────────────────────────────────────────────────────────────────────────────
+                                       🚀 DevOps & Deployment
+                     Docker • Kubernetes • Jenkins • GitHub Actions
+                                                  │
+──────────────────────────────────────────────────────────────────────────────────────────────────
+                                         🤖 Artificial Intelligence
+                    Fraud Detection • Risk Scoring • Chatbot • Test Generation
+                  AI Code Review • AI Analytics • AI Customer Recommendations
+
+```
 # 🚀 Features
 
 ### ✅ Customer Management
@@ -213,3 +265,29 @@ This repository is intended for educational purposes and enterprise software eng
 
 Current Status:
 Story-001 Customer Registration completed successfully.
+## 📅 Latest Progress (30-Jun-2026)
+
+### Story-001 Enterprise Customer Registration
+
+#### Development
+- ✅ Enterprise validation framework completed
+- ✅ Global exception handling implemented
+- ✅ PostgreSQL sequence-based customer number generation
+- ✅ Enterprise error response structure
+
+#### Testing Completed
+- ✅ Positive Testing
+- ✅ Mandatory Field Validation
+- ✅ Duplicate Validation
+- ✅ Format Validation
+- ✅ Boundary Value Analysis (Age 17, 18, 19)
+- ✅ HTTP Method Validation (GET/PUT/DELETE)
+- ✅ Malformed JSON validation
+
+#### Defect Fixed
+- Fixed malformed JSON request returning **500 Internal Server Error**.
+- Added `HttpMessageNotReadableException` handler.
+- API now correctly returns:
+  - HTTP 400 Bad Request
+  - `INVALID_REQUEST`
+  - `Malformed JSON request.`

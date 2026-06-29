@@ -3,7 +3,7 @@ package com.bank.api.exception;
 import java.time.LocalDateTime;
 
 import javax.servlet.http.HttpServletRequest;
-
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -145,6 +145,27 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(error,
                 HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    /**
+     * ==========================================================
+     * Malformed JSON Request
+     * HTTP 400 - Bad Request
+     * ==========================================================
+     */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleMalformedJson(
+            HttpMessageNotReadableException ex,
+            HttpServletRequest request) {
+
+        ErrorResponse error = new ErrorResponse();
+
+        error.setTimestamp(LocalDateTime.now());
+        error.setStatus(HttpStatus.BAD_REQUEST.value());
+        error.setErrorCode("INVALID_REQUEST");
+        error.setMessage("Malformed JSON request.");
+        error.setPath(request.getRequestURI());
+
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
 }
