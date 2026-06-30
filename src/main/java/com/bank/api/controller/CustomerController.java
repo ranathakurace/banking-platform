@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.bank.api.dto.CustomerRequest;
 import com.bank.api.dto.CustomerResponse;
+import com.bank.api.exception.InvalidCustomerException;
 import com.bank.api.service.CustomerService;
 
 @RestController
@@ -30,6 +31,25 @@ public class CustomerController {
                 customerService.register(request);
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+    @GetMapping("/{customerNumber}")
+    public ResponseEntity<CustomerResponse> getCustomerByCustomerNumber(
+            @PathVariable String customerNumber) {
+
+        customerNumber = customerNumber.trim();
+
+        if (customerNumber.isEmpty()) {
+            throw new InvalidCustomerException("Customer Number is mandatory.");
+        }
+
+        if (!customerNumber.matches("^CUST\\d{6}$")) {
+            throw new InvalidCustomerException("Invalid Customer Number format.");
+        }
+
+        CustomerResponse response =
+                customerService.getCustomerByCustomerNumber(customerNumber);
+
+        return ResponseEntity.ok(response);
     }
 
 }

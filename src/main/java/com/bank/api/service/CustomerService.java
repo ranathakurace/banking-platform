@@ -11,6 +11,7 @@ import com.bank.api.util.ValidationUtil;
 import com.bank.api.dto.CustomerRequest;
 import com.bank.api.dto.CustomerResponse;
 import com.bank.api.exception.CustomerAlreadyExistsException;
+import com.bank.api.exception.CustomerNotFoundException;
 import com.bank.api.exception.InvalidCustomerException;
 import com.bank.api.model.Customer;
 import com.bank.api.model.CustomerStatus;
@@ -75,6 +76,23 @@ public class CustomerService {
 
     	if (request.getDob().isAfter(LocalDate.now().minusYears(18))) {
     	    throw new InvalidCustomerException("Customer must be at least 18 years old.");
+    	}
+    	/*
+    	 * ==========================================================
+    	 * Step 1.0 : Validate Field Length
+    	 * ==========================================================
+    	 */
+
+    	// Full Name
+    	if (request.getFullName().trim().length() > 100) {
+    	    throw new InvalidCustomerException(
+    	            "Full Name cannot exceed 100 characters.");
+    	}
+
+    	// Email
+    	if (request.getEmail().trim().length() > 255) {
+    	    throw new InvalidCustomerException(
+    	            "Email cannot exceed 255 characters.");
     	}
     	/*
     	 * ==========================================================
@@ -229,5 +247,21 @@ public class CustomerService {
     	response.setMessage("Customer registered successfully.");
 
     	return response;
+    }
+    public CustomerResponse getCustomerByCustomerNumber(String customerNumber) {
+
+        Customer customer = customerRepository
+                .findByCustomerNumber(customerNumber)
+                .orElseThrow(() ->
+                        new CustomerNotFoundException(customerNumber));
+
+        CustomerResponse response = new CustomerResponse();
+
+        response.setCustomerNumber(customer.getCustomerNumber());
+        response.setFullName(customer.getFullName());
+        response.setCustomerStatus(customer.getCustomerStatus().name());
+        response.setKycStatus(customer.getKycStatus());
+
+        return response;
     }
 }

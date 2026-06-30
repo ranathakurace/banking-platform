@@ -37,10 +37,9 @@ public class SecurityConfig {
                     "/auth/**",
                     "/health"
             ).permitAll()
-
             .antMatchers(
-                    HttpMethod.POST,
-                    "/api/v1/customers/register"
+                    HttpMethod.GET,
+                    "/api/v1/customers/**"
             ).permitAll()
                 .anyRequest().authenticated()
             .and()

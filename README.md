@@ -161,18 +161,18 @@ src/main/java
 
 # 📋 Current Progress
 
-| Story     | Module                           | Status      |
-| --------- | -------------------------------- | ----------- |
-| Story-001 | Enterprise Customer Registration | ✅ Completed |
-| Story-002 | Customer Search API		       | ⏳ Planned   |
-| Story-003 | Cash Deposit                     | ⏳ Planned   |
-| Story-004 | Cash Withdrawal                  | ⏳ Planned   |
-| Story-005 | Fund Transfer                    | ⏳ Planned   |
-| Story-006 | Transaction History              | ⏳ Planned   |
-| Story-007 | Authentication & JWT             | ⏳ Planned   |
-| Story-008 | Role-Based Authorization         | ⏳ Planned   |
-| Story-009 | Fraud Detection                  | ⏳ Planned   |
-| Story-010 | Notification Service             | ⏳ Planned   |
+| Story     | Module                           | Status       	  |
+| --------- | -------------------------------- | -----------  	  |
+| Story-001 | Enterprise Customer Registration | ✅ Completed 	  |
+| Story-002 | Customer Search API		       | 🚧 In Progress   |
+| Story-003 | Cash Deposit                     | ⏳ Planned   	  |
+| Story-004 | Cash Withdrawal                  | ⏳ Planned   	  |
+| Story-005 | Fund Transfer                    | ⏳ Planned   	  |
+| Story-006 | Transaction History              | ⏳ Planned   	  |
+| Story-007 | Authentication & JWT             | ⏳ Planned   	  |
+| Story-008 | Role-Based Authorization         | ⏳ Planned   	  |
+| Story-009 | Fraud Detection                  | ⏳ Planned   	  |
+| Story-010 | Notification Service             | ⏳ Planned   	  |
 
 ---
 
@@ -213,6 +213,19 @@ Implemented:
 * AI Transaction Risk Scoring
 * LLM Powered Customer Support
 
+## Story-002 – Customer Search API
+
+Implemented
+
+* GET Customer by Customer Number
+* Optional.orElseThrow()
+* CustomerNotFoundException
+* DTO Mapping
+* REST Response
+* HTTP 200
+* HTTP 404
+* Input Validation
+
 ---
 
 # 🔮 Planned Enhancements
@@ -249,7 +262,7 @@ Please open an issue or submit a pull request after discussing significant chang
 # 📄 License
 
 This repository is intended for educational purposes and enterprise software engineering practice.
-## Latest Progress (29-Jun-2026)
+## Development Journal
 
 #### Story-001 Completion
 
@@ -291,3 +304,30 @@ Story-001 Customer Registration completed successfully.
   - HTTP 400 Bad Request
   - `INVALID_REQUEST`
   - `Malformed JSON request.`
+  
+  ## 📅 Latest Progress (01-Jul-2026)
+
+### Story-002 Customer Search API
+
+#### Development
+
+- ✅ GET Customer by Customer Number
+- ✅ Customer Search Service
+- ✅ CustomerNotFoundException
+- ✅ DTO Mapping
+- ✅ Repository Search using Optional
+- ✅ Spring Security updated for GET endpoint
+
+#### Testing Completed
+
+- ✅ Existing Customer (200 OK)
+- ✅ Customer Not Found (404)
+- ✅ Blank Customer Number
+- ✅ Invalid Customer Number
+- ✅ Security Validation
+
+#### Design Improvements
+
+- Added Customer Number validation before database access.
+- Applied RESTful HTTP status codes.
+- Improved service layer exception handling.
