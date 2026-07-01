@@ -32,6 +32,12 @@ public class CustomerController {
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
+    /**
+     * ==========================================================
+     * Story-002
+     * Search Customer by Customer Number
+     * ==========================================================
+     */
     @GetMapping("/{customerNumber}")
     public ResponseEntity<CustomerResponse> getCustomerByCustomerNumber(
             @PathVariable String customerNumber) {
@@ -51,5 +57,51 @@ public class CustomerController {
 
         return ResponseEntity.ok(response);
     }
+    /**
+     * ==========================================================
+     * Story-002
+     * Search Customer by PAN
+     * ==========================================================
+     */
+    @GetMapping("/search")
+    public ResponseEntity<CustomerResponse> getCustomerByPan(
+            @RequestParam String pan) {
 
-}
+        CustomerResponse response =
+                customerService.getCustomerByPan(pan);
+
+        return ResponseEntity.ok(response);
+    }
+    /**
+     * ==========================================================
+     * Story-002
+     * Search Customer by Email
+     * ==========================================================
+     */
+    @GetMapping("/search/email")
+    public ResponseEntity<CustomerResponse> getCustomerByEmail(
+            @RequestParam String email) {
+
+        CustomerResponse response =
+                customerService.getCustomerByEmail(email);
+
+        return ResponseEntity.ok(response);
+    }
+    /**
+     * ==========================================================
+     * Story-002
+     * Search Customer by Phone
+     * ==========================================================
+     */
+    @GetMapping("/search/phone")
+    public ResponseEntity<CustomerResponse> getCustomerByPhone(
+            @RequestParam String phone) {
+
+        CustomerResponse response =
+                customerService.getCustomerByPhone(phone);
+
+        return ResponseEntity.ok(response);
+    }
+    
+    }
+

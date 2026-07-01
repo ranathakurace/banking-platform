@@ -23,5 +23,11 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     
     @Query(value = "SELECT nextval('customer_sequence')", nativeQuery = true)
     Long getNextCustomerSequence();
+    
+    Optional<Customer> findByPan(String pan);
+    
+    Optional<Customer> findByEmail(String email);
+    
+    Optional<Customer> findByPhone(String phone);
 
 }

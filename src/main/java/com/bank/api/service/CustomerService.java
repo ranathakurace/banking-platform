@@ -253,7 +253,9 @@ public class CustomerService {
         Customer customer = customerRepository
                 .findByCustomerNumber(customerNumber)
                 .orElseThrow(() ->
-                        new CustomerNotFoundException(customerNumber));
+                new CustomerNotFoundException(
+                        "customer number",
+                        customerNumber));
 
         CustomerResponse response = new CustomerResponse();
 
@@ -264,4 +266,113 @@ public class CustomerService {
 
         return response;
     }
+    /**
+     * ==========================================================
+     * Search Customer by PAN
+     * ==========================================================
+     */
+    public CustomerResponse getCustomerByPan(String pan) {
+
+        // Normalize Input
+        String normalizedPan = pan.trim().toUpperCase();
+
+        // Validate PAN Format
+        if (!normalizedPan.matches(ValidationUtil.PAN_REGEX)) {
+            throw new InvalidCustomerException("Invalid PAN Number.");
+        }
+
+        // Search Customer
+        Customer customer = customerRepository
+                .findByPan(normalizedPan)
+                .orElseThrow(() ->
+                new CustomerNotFoundException(
+                        "PAN",
+                        normalizedPan));
+
+        // Map Entity to DTO
+        CustomerResponse response = new CustomerResponse();
+
+        response.setCustomerNumber(customer.getCustomerNumber());
+        response.setFullName(customer.getFullName());
+        response.setCustomerStatus(customer.getCustomerStatus().name());
+        response.setKycStatus(customer.getKycStatus());
+
+        return response;
+    }
+    /**
+     * ==========================================================
+     * Search Customer by Email
+     * ==========================================================
+     */
+    public CustomerResponse getCustomerByEmail(String email) {
+
+        // Normalize Input
+        String normalizedEmail = email.trim().toLowerCase();
+
+        // Validate Email
+        if (!normalizedEmail.matches(ValidationUtil.EMAIL_REGEX)) {
+            throw new InvalidCustomerException("Invalid Email Address.");
+        }
+
+        // Search Customer
+        Customer customer = customerRepository
+                .findByEmail(normalizedEmail)
+                .orElseThrow(() ->
+                new CustomerNotFoundException(
+                        "Email",
+                        normalizedEmail));
+
+        // Map Entity to DTO
+        CustomerResponse response = new CustomerResponse();
+
+        response.setCustomerNumber(customer.getCustomerNumber());
+        response.setFullName(customer.getFullName());
+        response.setCustomerStatus(customer.getCustomerStatus().name());
+        response.setKycStatus(customer.getKycStatus());
+
+        return response;
+    }
+    /**
+     * ==========================================================
+     * Search Customer by Phone Number
+     * ==========================================================
+     */
+    public CustomerResponse getCustomerByPhone(String phone) {
+
+        // Normalize
+    	String normalizedPhoneNumber = phone.trim();
+        // Validate
+    	if (!normalizedPhoneNumber.matches(ValidationUtil.PHONE_REGEX)) {
+            throw new InvalidCustomerException("Invalid Phone Number.");
+        }
+
+        // Search
+    	Customer customer = customerRepository
+                .findByPhone(normalizedPhoneNumber)
+                .orElseThrow(() ->
+                new CustomerNotFoundException(
+                        "Phone",
+                        normalizedPhoneNumber));
+        
+
+        return mapToCustomerResponse(customer);
+
+    }
+    /**
+     * ==========================================================
+     * Map Customer Entity to Response DTO
+     * ==========================================================
+     */
+    private CustomerResponse mapToCustomerResponse(Customer customer) {
+
+        CustomerResponse response = new CustomerResponse();
+
+        response.setCustomerNumber(customer.getCustomerNumber());
+        response.setFullName(customer.getFullName());
+        response.setCustomerStatus(customer.getCustomerStatus().name());
+        response.setKycStatus(customer.getKycStatus());
+
+        return response;
+    }
+    
 }

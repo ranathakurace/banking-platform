@@ -139,6 +139,111 @@ src/main/java
                   AI Code Review • AI Analytics • AI Customer Recommendations
 
 ```
+##Progress Legend
+
+🟢 Completed
+🟡 In Progress
+⚪ Planned
+
+Customer Module
+
+🟢 Customer Registration
+
+🟢 Search by Customer Number
+
+🟢 Search by PAN
+
+🟢 Search by Email
+
+🟢 Search by Phone
+
+⚪ Search by Aadhaar
+
+⚪ Search by CIF
+
+⚪ Search by Passport
+
+⚪ Search by Account Number
+
+-----------------------------------------------------
+
+Account Module
+
+⚪ Open Account
+
+⚪ Close Account
+
+⚪ Freeze Account
+
+⚪ Account Statement
+
+-----------------------------------------------------
+
+Transaction Module
+
+⚪ Deposit
+
+⚪ Withdrawal
+
+⚪ Fund Transfer
+
+⚪ Transaction History
+
+-----------------------------------------------------
+
+Payment Gateway (Mock)
+
+⚪ Payment Initiation
+
+⚪ Payment Authorization
+
+⚪ Payment Success
+
+⚪ Payment Failure
+
+⚪ Payment Retry
+
+⚪ Refund
+
+⚪ UPI
+
+⚪ IMPS
+
+⚪ NEFT
+
+⚪ RTGS
+
+-----------------------------------------------------
+
+Authentication
+
+🟢 JWT Authentication
+
+🟢 Role Based Authorization
+
+⚪ Refresh Token
+
+⚪ OTP Verification
+
+-----------------------------------------------------
+
+Quality Engineering
+
+🟢 Manual API Testing
+
+🟢 Validation Testing
+
+🟢 Security Testing
+
+⚪ RestAssured Automation
+
+⚪ Integration Testing
+
+⚪ WireMock
+
+⚪ Performance Testing
+
+⚪ Contract Testing
 # 🚀 Features
 
 ### ✅ Customer Management
@@ -164,7 +269,7 @@ src/main/java
 | Story     | Module                           | Status       	  |
 | --------- | -------------------------------- | -----------  	  |
 | Story-001 | Enterprise Customer Registration | ✅ Completed 	  |
-| Story-002 | Customer Search API		       | 🚧 In Progress   |
+| Story-002 | Customer Search API		       | ✅ Completed   	  |
 | Story-003 | Cash Deposit                     | ⏳ Planned   	  |
 | Story-004 | Cash Withdrawal                  | ⏳ Planned   	  |
 | Story-005 | Fund Transfer                    | ⏳ Planned   	  |
@@ -275,7 +380,21 @@ This repository is intended for educational purposes and enterprise software eng
 ✔ Invalid Customer Name validation
 ✔ Centralized exception handling verified
 ✔ Enterprise error responses validated
+#### Today's Achievement
 
+✔ Completed Story-002
+
+Implemented four enterprise search APIs using:
+
+- Spring Boot
+- Spring Data JPA
+- Custom Exceptions
+- Optional.orElseThrow()
+- Input Normalization
+- Enterprise Validation
+- RESTful API Design
+
+All APIs have been manually validated using Postman with positive and negative test cases.
 Current Status:
 Story-001 Customer Registration completed successfully.
 ## 📅 Latest Progress (30-Jun-2026)
@@ -331,3 +450,86 @@ Story-001 Customer Registration completed successfully.
 - Added Customer Number validation before database access.
 - Applied RESTful HTTP status codes.
 - Improved service layer exception handling.
+# 📅 Progress Update (02-Jul-2026)
+
+## ✅ Story-002 Completed - Enterprise Customer Search APIs
+
+Implemented enterprise-grade customer search functionality with proper validation, normalization, exception handling and testing.
+
+### Implemented APIs
+
+| API | Status |
+|------|--------|
+| GET /api/v1/customers/{customerNumber} | ✅ Completed |
+| GET /api/v1/customers/search?pan= | ✅ Completed |
+| GET /api/v1/customers/search/email?email= | ✅ Completed |
+| GET /api/v1/customers/search/phone?phone= | ✅ Completed |
+
+---
+
+## Enterprise Features Implemented
+
+- ✅ Input normalization
+- Trim whitespace
+- PAN converted to uppercase
+- Email converted to lowercase
+
+- ✅ Business validation
+- Customer Number validation
+- PAN format validation
+- Email format validation
+- Phone number validation
+
+- ✅ Exception handling
+- InvalidCustomerException
+- CustomerNotFoundException
+
+- ✅ Repository search using Spring Data JPA
+
+- ✅ RESTful HTTP Status Codes
+- 200 OK
+- 400 Bad Request
+- 404 Not Found
+
+---
+
+## Testing Completed
+
+### Positive Testing
+
+- Existing Customer Number
+- Existing PAN
+- Existing Email
+- Existing Phone Number
+
+### Negative Testing
+
+- Invalid Customer Number
+- Invalid PAN
+- Invalid Email
+- Invalid Phone
+
+### Boundary & Validation
+
+- Leading spaces
+- Trailing spaces
+- Lowercase PAN
+- Uppercase Email
+- Invalid regex
+- Unknown customer
+- Empty values
+- Duplicate scenarios
+
+---
+
+## Enterprise Concepts Learned
+
+- Spring Data JPA Query Methods
+- Optional<T>
+- orElseThrow()
+- Custom Exceptions
+- DTO Mapping
+- Input Normalization
+- REST API Design
+- HTTP Status Codes
+- Layered Architecture
